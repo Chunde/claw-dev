@@ -163,6 +163,12 @@ Start Claw Dev from the repository root on any platform:
 npm run claw-dev
 ```
 
+`npm start` is an alias for the same launcher:
+
+```bash
+npm start
+```
+
 Or launch it directly from the bundled client directory on Windows:
 
 ```powershell
@@ -790,7 +796,7 @@ If you hand this repository to someone else, the shortest setup path is:
 
 1. Install Node.js 22 or newer
 2. Run `npm install`
-3. Start `npm run claw-dev`
+3. Start `npm start` or `npm run claw-dev`
 4. Choose a provider
 5. Supply credentials or run Ollama locally
 
