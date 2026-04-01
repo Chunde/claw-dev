@@ -26,7 +26,7 @@ const defaultPorts = {
 };
 
 const providerMenuOptions = [
-  ["1", "anthropic", "Anthropic", "Best overall Claude-style compatibility", "Anthropic login or ANTHROPIC_API_KEY"],
+  ["1", "anthropic", "Anthropic", "Best overall Claude-style compatibility", "ANTHROPIC_API_KEY"],
   ["2", "openai", "OpenAI", "Strong general cloud option with custom model ids", "OPENAI_API_KEY or reusable Codex login"],
   ["3", "gemini", "Gemini", "Good balance of cost, speed, and long-context cloud models", "GEMINI_API_KEY"],
   ["4", "groq", "Groq", "Very fast hosted inference with open model choices", "GROQ_API_KEY"],
@@ -273,6 +273,7 @@ async function configureAnthropic(env, rl) {
   printProviderStartSummary("anthropic", [
     "Launching direct Anthropic mode.",
     "This path talks to Anthropic without the local compatibility proxy.",
+    "Claw Dev uses Anthropic API-key mode here to avoid mixed login and API auth conflicts.",
   ]);
 
   const configuredKey = readConfiguredSecret(env, "ANTHROPIC_API_KEY");
@@ -283,24 +284,13 @@ async function configureAnthropic(env, rl) {
     return;
   }
 
-  const answer = (await rl.question(
-    "No ANTHROPIC_API_KEY found. Use the normal Anthropic login flow in the app? [Y/n]: ",
-  ))
-    .trim()
-    .toLowerCase();
-
-  if (answer === "n" || answer === "no") {
-    const key = (await rl.question("Enter ANTHROPIC_API_KEY (input is visible): ")).trim();
-    if (!key) {
-      throw new Error("ANTHROPIC_API_KEY was not provided.");
-    }
-    env.ANTHROPIC_API_KEY = key;
-    process.stdout.write("Using the provided ANTHROPIC_API_KEY for this session.\n");
-    process.stdout.write("The bundled terminal client may ask you to confirm the detected custom API key on startup.\n");
-    return;
+  const key = (await rl.question("Enter ANTHROPIC_API_KEY (input is visible): ")).trim();
+  if (!key) {
+    throw new Error("Anthropic mode in Claw Dev requires ANTHROPIC_API_KEY.");
   }
-
-  process.stdout.write("You can log in with an Anthropic account or Anthropic Console inside the app.\n");
+  env.ANTHROPIC_API_KEY = key;
+  process.stdout.write("Using the provided ANTHROPIC_API_KEY for this session.\n");
+  process.stdout.write("This avoids the auth conflict between claude.ai login state and direct API usage.\n");
 }
 
 async function configureCompatProvider(provider, env, rl, modelArg) {

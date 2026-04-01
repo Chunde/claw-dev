@@ -2,7 +2,7 @@
 
 Claw Dev is a local multi-provider coding assistant launcher for the bundled terminal client in this repository. It gives you one entry point and lets you choose how model requests are resolved at startup:
 
-- Anthropic direct mode with `ANTHROPIC_API_KEY` or the bundled Anthropic login flow
+- Anthropic direct mode with `ANTHROPIC_API_KEY`
 - OpenAI through a local Anthropic-compatible proxy
 - Google Gemini through a local Anthropic-compatible proxy
 - Groq through a local Anthropic-compatible proxy
@@ -28,7 +28,9 @@ Claw Dev is designed to feel like one tool rather than a provider-specific wrapp
 
 ### Anthropic
 
-Use the bundled client with the normal Anthropic login flow or with `ANTHROPIC_API_KEY`.
+Use direct Anthropic API mode with `ANTHROPIC_API_KEY`.
+
+Claw Dev intentionally avoids mixing the bundled claude.ai login state with direct Anthropic API mode because that combination can produce confusing auth conflicts and misleading startup prompts.
 
 ### OpenAI
 
@@ -75,7 +77,7 @@ Install the following before you begin:
 Provider-specific requirements:
 
 - Anthropic
-  - an Anthropic account for in-app login, or `ANTHROPIC_API_KEY`
+  - `ANTHROPIC_API_KEY`
 - OpenAI
   - `OPENAI_API_KEY`
   - or `codex login` if you want to reuse your ChatGPT/Codex OAuth session from `~/.codex/auth.json` as an experimental fallback

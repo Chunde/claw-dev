@@ -941,7 +941,19 @@ function networkErrorForProvider(
 
 function parseProviderErrorBody(rawText: string): unknown {
   try {
-    return JSON.parse(rawText);
+    const parsed = JSON.parse(rawText);
+    if (isRecord(parsed) && typeof parsed.message === "string") {
+      const nestedMessage = parsed.message.trim();
+      if (nestedMessage.startsWith("{") || nestedMessage.startsWith("[")) {
+        try {
+          const reparsed = JSON.parse(nestedMessage);
+          return reparsed;
+        } catch {
+          return parsed;
+        }
+      }
+    }
+    return parsed;
   } catch {
     return rawText;
   }
